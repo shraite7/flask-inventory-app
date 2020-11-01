@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Inventory Managmnet App</title>
+{% endblock %}
+
+
+{% block content %}
+<main>
+    <div class="container-fluid">
+        <h1 class="mt-4">Dashboard</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+            <li class="breadcrumb-item active">Movements</li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-header">Movements</div>
+            <div class="card-body">
+                <div class="card mb-4">
+                    <div class="card-header">New Movement</div>
+                    <div class="card-body">
+                        <form action="/movements/" method="POST" id="movements_from">
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="productId">Product Name</label>
+                                        <select id="productId" name="productId" class="form-control">
+                                            <option selected value="">Choose...</option>
+                                            {% if products|length > 0 %}
+                                            {% for product in products%}
+                                            <!-- <option value="{{product.product_id}}">{{product.product_name}}</option> -->
+                                            <option value="{{product.product_id}}">{{product.product_id}}</option>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="qty">quantity</label>
+                                        <input class="form-control" name="qty" id="qty" type="number" placeholder="Enter Quantity" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <label for="fromLocation">From</label>
+                                    <select id="fromLocation" class="form-control" name="fromLocation">
+                                        <option selected value="">Choose...</option>
+                                        {# 
+                                        {% if locations|length > 0 %}
+                                        {% for location in locations%}
+                                        <option value="{{location.location_id}}">{{location.location_id}}</option>
+                                        {% endfor %}
+                                        {% endif %}
+                                        #}
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="toLocation">TO</label>
+                                    <select id="toLocation" name="toLocation" class="form-control">
+                                        <option selected value="">Choose...</option>
+                                        {% if locations|length > 0 %}
+                                        {% for location in locations%}
+                                        <option value="{{location.location_id}}">{{location.location_id}}</option>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group mt-4 mb-0">
+                                <input type="submit" class="btn btn-primary btn-block" value="Add Movement" class="btn btn-primary">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table mr-1"></i>
+                    Movements Table
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        {% if movements|length < 1 %}
+                        <h4>There are no Movements, add one above</h4>
+                        {% else %}
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for movement in movements%}
+                                <tr>
+                                    <td>{{ movement.movement_id }}</td>
+                                    <td>{{ movement.product_id }}</td>
+                                    <td>{{ movement.qty }}</td>
+                                    <td>{{ movement.from_location }}</td>
+                                    <td>{{ movement.to_location }}</td>
+                                    <td>{{ movement.movement_time }}</td>
+                                    <td>
+                                        <a href="/delete-movement/{{ movement.movement_id }}">Delete</a>
+                                        <br>
+                                        <a href="/update-movement/{{ movement.movement_id }}">Update</a>  
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

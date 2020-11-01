@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title%}
+<title>Update Location</title>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container-fluid">
+        <h1 class="mt-4">Dashboard</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+            <li class="breadcrumb-item active">Update Location</li>
+        </ol>
+        <div class="card mb-4">
+
+            <div class="card-header">Update Location</div>
+            <div class="card-body">
+                <form action="/update-location/{{location.location_id}}" method="POST">
+                    <label for="location_name" class="col-form-label">Location Name</label>
+                    <input type="text" name="location_name" id="location_name" value="{{location.location_id}}">
+                    <input type="submit" value="Update" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

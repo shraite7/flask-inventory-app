@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title%}
+<title>Update Product Movement</title>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container-fluid">
+        <h1 class="mt-4">Dashboard</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+            <li class="breadcrumb-item active">Update Product Movement</li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-header">Update Product Movement</div>
+            <div class="card-body">
+                <form action="/update-movement/{{movement.movement_id}}" method="POST">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="productId">Product Name</label>
+                                <select id="productId" name="productId" class="form-control">
+                                    <option selected value="">Choose...</option>
+                                    {% if products|length > 0 %}
+                                    {% for product in products %}
+                                    <option value="{{product.product_id}}"
+                                        {% if product.product_id|string() == movement.product_id %} selected {% endif %}>
+                                        {{product.product_id}}
+                                    </option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="qty">quantity</label>
+                                <input class="form-control" value={{movement.qty}} name="qty" id="qty" type="number" placeholder="Enter Quantity" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label for="fromLocation">From</label>
+                            <select id="fromLocation" class="form-control" name="fromLocation">
+                                <option selected value="">Choose...</option>
+                                {% if locations|length > 0 %}
+                                {% for location in locations%}
+                                <option value="{{location.location_id}}"
+                                    {% if location.location_id|string() == movement.from_location %} selected {% endif %}>
+                                    {{location.location_id}}
+                                </option>
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="toLocation">TO</label>
+                            <select id="toLocation" name="toLocation" class="form-control">
+                                <option selected value="">Choose...</option>
+                                {% if locations|length > 0 %}
+                                {% for location in locations%}
+                                <option value="{{location.location_id}}"
+                                    {% if location.location_id|string() == movement.to_location %} selected {% endif %}
+                                >
+                                {{location.location_id}}
+                                </option>
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group mt-4 mb-0">
+                        <input type="submit" class="btn btn-primary btn-block" value="Update Movement" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

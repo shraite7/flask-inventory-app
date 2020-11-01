@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Inventory Managmnet App</title>
+{% endblock %}
+
+
+{% block content %}
+<main>
+    <div class="container-fluid">
+        <h1 class="mt-4">Dashboard</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-header">Products</div>
+            <div class="card-body">
+                <div class="card mb-4">
+                    <div class="card-header">New Product</div>
+                    <div class="card-body">
+                        <form action="/" method="POST" id="product_form">
+                            <label for="product_name" class="col-form-label">Product Name</label>
+                            <input type="text" name="product_name" id="product_name">
+                            <input type="submit" value="Add Product" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table mr-1"></i>
+                    Products Table
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        {% if products|length < 1 %}
+                        <h4>There are no Products, add one above</h4>
+                        {% else %}
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for product in products %}
+                                <tr>
+                                    <td>{{ product.product_id }}</td>
+                                    <td>{{ product.date_created.date() }}</td>
+                                    <td>
+                                        <a href="/delete-product/{{ product.product_id }}">Delete</a>
+                                        <br>
+                                        <a href="/update-product/{{ product.product_id }}">Update</a>  
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">Locations</div>
+            <div class="card-body">
+                <div class="card mb-4">
+                    <div class="card-header">New Location</div>
+                    <div class="card-body">
+                        <form action="/" method="POST" id="location_form">
+                            <label for="location_name" class="col-form-label">Location Name</label>
+                            <input type="text" name="location_name" id="location_name">
+                            <input type="submit" value="Add Location" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table mr-1"></i>
+                    Locations Table
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        {% if locations|length < 1 %}
+                        <h4>There are no Locations, add one above</h4>
+                        {% else %}
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Location Name</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Location Name</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for location in locations %}
+                                <tr>
+                                    <td>{{ location.location_id }}</td>
+                                    <td>{{ location.date_created.date() }}</td>
+                                    <td>
+                                        <a href="/delete-location/{{ location.location_id }}">Delete</a>
+                                        <br>
+                                        <a href="/update-location/{{ location.location_id }}">Update</a>  
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

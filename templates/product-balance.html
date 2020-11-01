@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Inventory Managmnet App</title>
+{% endblock %}
+
+
+{% block content %}
+<main>
+    <div class="container-fluid">
+        <h1 class="mt-4">Dashboard</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+            <li class="breadcrumb-item active">Product Balance</li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-header">Product Balance</div>
+            <div class="card-body">
+                <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table mr-1"></i>
+                    Product Balance Report
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                                    
+                        {% if movements|length < 1 %}
+                        <h4>There are no Movements, add one above</h4>
+                        {% else %}
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Warehouse</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Warehouse</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                
+                                {% for pkey, values in movements.items() %}
+                                    {% set count = values|length() %}
+                                    <tr>
+                                        <td>{{pkey}}</td>
+                                        {% for key, value in values.items() %}
+                                            <td>{{key}}</td>
+                                            <td>{{value.qty}}</td>
+                                            {% if values|length() > 1 %}
+                                                {% if values|last != key %}
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{pkey}}</td>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                    
+                            </tbody>
+                        </table>
+                        {% endif %}
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

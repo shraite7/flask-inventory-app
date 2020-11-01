@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title%}
+<title>Update Product</title>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container-fluid">
+        <h1 class="mt-4">Dashboard</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+            <li class="breadcrumb-item active">Update Product</li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-header">Update Product</div>
+            <div class="card-body">
+                <form action="/update-product/{{product.product_id}}" method="POST">
+                    <label for="product_name" class="col-form-label">Product Name</label>
+                    <input type="text" name="product_name" id="product_name" value="{{product.product_id}}">
+                    <br>
+                    <input type="submit" value="Update" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
