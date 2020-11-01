@@ -112,12 +112,14 @@ def viewProduct():
 @app.route("/update-product/<name>", methods=["POST", "GET"])
 def updateProduct(name):
     product = Product.query.get_or_404(name)
+    old_porduct = product.product_id
 
     if request.method == "POST":
         product.product_id    = request.form['product_name']
 
         try:
             db.session.commit()
+            updateProductInMovements(old_porduct, request.form['product_name'])
             return redirect("/products/")
 
         except:
@@ -139,12 +141,15 @@ def deleteProduct(name):
 @app.route("/update-location/<name>", methods=["POST", "GET"])
 def updateLocation(name):
     location = Location.query.get_or_404(name)
+    old_location = location.location_id
 
     if request.method == "POST":
         location.location_id = request.form['location_name']
 
         try:
             db.session.commit()
+            updateLocationInMovements(
+                old_location, request.form['location_name'])
             return redirect("/locations/")
 
         except:
@@ -311,6 +316,23 @@ def getPDublicate():
         return {"output": False}
     else:
         return {"output": True}
+
+def updateLocationInMovements(oldLocation, newLocation):
+    movement = ProductMovement.query.filter(ProductMovement.from_location == oldLocation).all()
+    movement2 = ProductMovement.query.filter(ProductMovement.to_location == oldLocation).all()
+    for mov in movement2:
+        mov.to_location = newLocation
+    for mov in movement:
+        mov.from_location = newLocation
+     
+    db.session.commit()
+
+def updateProductInMovements(oldProduct, newProduct):
+    movement = ProductMovement.query.filter(ProductMovement.product_id == oldProduct).all()
+    for mov in movement:
+        mov.product_id = newProduct
+    
+    db.session.commit()
 
 if (__name__ == "__main__"):
     app.run(debug=True)
