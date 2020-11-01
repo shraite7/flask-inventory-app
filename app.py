@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from collections import defaultdict
 from datetime import datetime
 
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventory.db'
 db = SQLAlchemy(app)
@@ -18,7 +17,6 @@ class Product(db.Model):
     def __repr__(self):
         return '<Product %r>' % self.product_id
 
-
 class Location(db.Model):
     __tablename__   = 'locations'
     location_id     = db.Column(db.String(200), primary_key=True)
@@ -26,7 +24,6 @@ class Location(db.Model):
     
     def __repr__(self):
         return '<Location %r>' % self.location_id
-
 
 class ProductMovement(db.Model):
 
@@ -76,6 +73,42 @@ def index():
         locations   = Location.query.order_by(Location.date_created).all()
         return render_template("index.html", products = products, locations = locations)
 
+@app.route('/locations/', methods=["POST", "GET"])
+def viewLocation():
+    if (request.method == "POST") and ('location_name' in request.form):
+        location_name = request.form["location_name"]
+        new_location = Location(location_id=location_name)
+
+        try:
+            db.session.add(new_location)
+            db.session.commit()
+            return redirect("/locations/")
+
+        except:
+            locations = Location.query.order_by(Location.date_created).all()
+            return "There Was an issue while add a new Location"
+    else:
+        locations = Location.query.order_by(Location.date_created).all()
+        return render_template("locations.html", locations=locations)
+
+@app.route('/products/', methods=["POST", "GET"])
+def viewProduct():
+    if (request.method == "POST") and ('product_name' in request.form):
+        product_name = request.form["product_name"]
+        new_product = Product(product_id=product_name)
+
+        try:
+            db.session.add(new_product)
+            db.session.commit()
+            return redirect("/products/")
+
+        except:
+            products = Product.query.order_by(Product.date_created).all()
+            return "There Was an issue while add a new Product"
+    else:
+        products = Product.query.order_by(Product.date_created).all()
+        return render_template("products.html", products=products)
+
 @app.route("/update-product/<name>", methods=["POST", "GET"])
 def updateProduct(name):
     product = Product.query.get_or_404(name)
@@ -85,7 +118,7 @@ def updateProduct(name):
 
         try:
             db.session.commit()
-            return redirect("/")
+            return redirect("/products/")
 
         except:
             return "There was an issue while updating the Product"
@@ -99,7 +132,7 @@ def deleteProduct(name):
     try:
         db.session.delete(product_to_delete)
         db.session.commit()
-        return redirect("/")
+        return redirect("/products/")
     except:
         return "There was an issue while deleteing the Product"
 
@@ -112,7 +145,7 @@ def updateLocation(name):
 
         try:
             db.session.commit()
-            return redirect("/")
+            return redirect("/locations/")
 
         except:
             return "There was an issue while updating the Location"
@@ -126,7 +159,7 @@ def deleteLocation(id):
     try:
         db.session.delete(location_to_delete)
         db.session.commit()
-        return redirect("/")
+        return redirect("/locations/")
     except:
         return "There was an issue while deleteing the Location"
 
@@ -253,6 +286,31 @@ def getLocations():
             locationDict[location.to_location]["qty"] = location.qty
 
     return locationDict
+
+
+@app.route("/dub-locations/", methods=["POST", "GET"])
+def getDublicate():
+    location = request.form["location"]
+    locations = Location.query.\
+        filter(Location.location_id == location).\
+        all()
+    print(locations)
+    if locations:
+        return {"output": False}
+    else:
+        return {"output": True}
+
+@app.route("/dub-products/", methods=["POST", "GET"])
+def getPDublicate():
+    product_name = request.form["product_name"]
+    products = Product.query.\
+        filter(Product.product_id == product_name).\
+        all()
+    print(products)
+    if products:
+        return {"output": False}
+    else:
+        return {"output": True}
 
 if (__name__ == "__main__"):
     app.run(debug=True)

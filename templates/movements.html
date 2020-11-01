@@ -93,7 +93,6 @@
                                     <th>From</th>
                                     <th>To</th>
                                     <th>Time</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -104,7 +103,6 @@
                                     <th>From</th>
                                     <th>To</th>
                                     <th>Time</th>
-                                    <th>Actions</th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -116,11 +114,6 @@
                                     <td>{{ movement.from_location }}</td>
                                     <td>{{ movement.to_location }}</td>
                                     <td>{{ movement.movement_time }}</td>
-                                    <td>
-                                        <a href="/delete-movement/{{ movement.movement_id }}">Delete</a>
-                                        <br>
-                                        <a href="/update-movement/{{ movement.movement_id }}">Update</a>  
-                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

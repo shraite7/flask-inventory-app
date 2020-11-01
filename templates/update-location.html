@@ -10,16 +10,17 @@
         <h1 class="mt-4">Dashboard</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/locations/">Locations</a></li>
             <li class="breadcrumb-item active">Update Location</li>
         </ol>
         <div class="card mb-4">
 
             <div class="card-header">Update Location</div>
             <div class="card-body">
-                <form action="/update-location/{{location.location_id}}" method="POST">
+                <form action="/update-location/{{location.location_id}}" method="POST" id="location_form">
                     <label for="location_name" class="col-form-label">Location Name</label>
                     <input type="text" name="location_name" id="location_name" value="{{location.location_id}}">
-                    <input type="submit" value="Update" class="btn btn-primary">
+                    <input id="submitLocation" value="Update" class="btn btn-primary">
                 </form>
             </div>
         </div>
