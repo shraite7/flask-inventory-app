@@ -157,7 +157,7 @@ def updateLocation(name):
     else:
         return render_template("update-location.html", location=location)
 
-@app.route("/delete-location/<name>")
+@app.route("/delete-location/<id>")
 def deleteLocation(id):
     location_to_delete = Location.query.get_or_404(id)
 
