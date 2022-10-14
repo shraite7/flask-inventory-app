@@ -67,7 +67,7 @@ def index():
             return redirect("/")
         
         except:
-            return "There Was an issue while add a new Location"
+            return "There was an issue while trying to add a new Location"
     else:
         products    = Product.query.order_by(Product.date_created).all()
         locations   = Location.query.order_by(Location.date_created).all()
@@ -86,7 +86,7 @@ def viewLocation():
 
         except:
             locations = Location.query.order_by(Location.date_created).all()
-            return "There Was an issue while add a new Location"
+            return "There was an issue while trying to add a new Location"
     else:
         locations = Location.query.order_by(Location.date_created).all()
         return render_template("locations.html", locations=locations)
@@ -104,7 +104,7 @@ def viewProduct():
 
         except:
             products = Product.query.order_by(Product.date_created).all()
-            return "There Was an issue while add a new Product"
+            return "There Was an while trying to add a new Product"
     else:
         products = Product.query.order_by(Product.date_created).all()
         return render_template("products.html", products=products)
@@ -136,7 +136,7 @@ def deleteProduct(name):
         db.session.commit()
         return redirect("/products/")
     except:
-        return "There was an issue while deleteing the Product"
+        return "There was an issue while deleting the Product"
 
 @app.route("/update-location/<name>", methods=["POST", "GET"])
 def updateLocation(name):
@@ -166,7 +166,7 @@ def deleteLocation(id):
         db.session.commit()
         return redirect("/locations/")
     except:
-        return "There was an issue while deleteing the Location"
+        return "There was an issue while deleting the Location"
 
 @app.route("/movements/", methods=["POST", "GET"])
 def viewMovements():
@@ -184,7 +184,7 @@ def viewMovements():
             return redirect("/movements/")
 
         except:
-            return "There Was an issue while add a new Movement"
+            return "There Was an while trying to add a new Movement"
     else:
         products    = Product.query.order_by(Product.date_created).all()
         locations   = Location.query.order_by(Location.date_created).all()
@@ -234,7 +234,7 @@ def deleteMovement(id):
         db.session.commit()
         return redirect("/movements/")
     except:
-        return "There was an issue while deleteing the Prodcut Movement"
+        return "There was an issue while deleting the Product Movement"
 
 @app.route("/product-balance/", methods=["POST", "GET"])
 def productBalanceReport():
