@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from collections import defaultdict
 from datetime import datetime
@@ -41,6 +41,23 @@ class ProductMovement(db.Model):
     
     def __repr__(self):
         return '<ProductMovement %r>' % self.movement_id
+    # --- ADD THIS CODE BELOW THE EXISTING DATABASE MODELS ---
+
+class Supplier(db.Model):
+    __tablename__ = 'suppliers'  # Name of the table in inventory.db
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    contact_email = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=True)
+
+    # Helper method to convert database objects into JSON-friendly Python dictionaries
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "contact_email": self.contact_email,
+            "phone": self.phone
+        }
 
 @app.route('/', methods=["POST", "GET"])
 def index():
@@ -335,4 +352,79 @@ def updateProductInMovements(oldProduct, newProduct):
     db.session.commit()
 
 if (__name__ == "__main__"):
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()  # Indented 8 spaces total
+   
+    app.run(debug=True)  
+    
+    from flask import jsonify, request
+
+# =====================================================================
+# SUPPLIER REST API ENDPOINTS (CRUD)
+# =====================================================================
+
+# 1. CREATE: Add a new supplier
+@app.route('/api/suppliers', methods=['POST'])
+def create_supplier():
+    data = request.get_json() or {}
+    
+    # Input validation (Negative case handling)
+    if 'name' not in data or 'contact_email' not in data:
+        return jsonify({"error": "Missing required fields: 'name' and 'contact_email'"}), 400
+        
+    new_supplier = Supplier(
+        name=data['name'],
+        contact_email=data['contact_email'],
+        phone=data.get('phone', '') # phone is optional
+    )
+    db.session.add(new_supplier)
+    db.session.commit()
+    
+    return jsonify(new_supplier.to_dict()), 201
+
+
+# 2. READ ALL: Get all suppliers
+@app.route('/api/suppliers', methods=['GET'])
+def get_suppliers():
+    suppliers = Supplier.query.all()
+    return jsonify([supplier.to_dict() for supplier in suppliers]), 200
+
+
+# 3. READ ONE: Get a single supplier by ID
+@app.route('/api/suppliers/<int:supplier_id>', methods=['GET'])
+def get_supplier(supplier_id):
+    supplier = Supplier.query.get(supplier_id)
+    if not supplier:
+        return jsonify({"error": f"Supplier with ID {supplier_id} not found"}), 404
+    return jsonify(supplier.to_dict()), 200
+
+
+# 4. UPDATE: Modify an existing supplier's details
+@app.route('/api/suppliers/<int:supplier_id>', methods=['PUT'])
+def update_supplier(supplier_id):
+    supplier = Supplier.query.get(supplier_id)
+    if not supplier:
+        return jsonify({"error": f"Supplier with ID {supplier_id} not found"}), 404
+        
+    data = request.get_json() or {}
+    
+    # Update fields if they are provided in the JSON body
+    supplier.name = data.get('name', supplier.name)
+    supplier.contact_email = data.get('contact_email', supplier.contact_email)
+    supplier.phone = data.get('phone', supplier.phone)
+    
+    db.session.commit()
+    return jsonify(supplier.to_dict()), 200
+
+
+# 5. DELETE: Remove a supplier from the database
+@app.route('/api/suppliers/<int:supplier_id>', methods=['DELETE'])
+def delete_supplier(supplier_id):
+    supplier = Supplier.query.get(supplier_id)
+    if not supplier:
+        return jsonify({"error": f"Supplier with ID {supplier_id} not found"}), 404
+        
+    db.session.delete(supplier)
+    db.session.commit()
+    return jsonify({"message": f"Supplier {supplier_id} successfully deleted"}), 200
+    
